@@ -2571,8 +2571,13 @@ body.wed9-bride-first .wed9-closing-name-groom {
 }
 
 .wed9-blessings-names {
+  display: inline-block;
+  margin-top: 0.35rem;
   font-family: 'Cormorant Garamond', serif;
-  color: var(--wed9-text);
+  font-size: clamp(1.45rem, 5.5vw, 2.1rem);
+  font-weight: 600;
+  color: #3f3022;
+  letter-spacing: 0.04em;
 }
 
 /* ── Reduced motion ── */

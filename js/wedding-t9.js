@@ -1015,11 +1015,28 @@
   }
 
   function initMute() {
-    if (!muteBtn || !audio) return;
-    muteBtn.addEventListener('click', function () {
-      audio.muted = !audio.muted;
-      muteBtn.textContent = audio.muted ? '🔇' : '🔊';
-      muteBtn.setAttribute('aria-label', audio.muted ? 'Unmute music' : 'Mute music');
+    if (!audio) return;
+
+    if (muteBtn) {
+      muteBtn.addEventListener('click', function () {
+        audio.muted = !audio.muted;
+        muteBtn.textContent = audio.muted ? '🔇' : '🔊';
+        muteBtn.setAttribute('aria-label', audio.muted ? 'Unmute music' : 'Mute music');
+      });
+    }
+
+    function pauseAudio() {
+      if (!audio) return;
+      try {
+        audio.pause();
+      } catch (e) {}
+    }
+
+    window.addEventListener('pagehide', pauseAudio);
+    window.addEventListener('beforeunload', pauseAudio);
+    window.addEventListener('popstate', pauseAudio);
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden) pauseAudio();
     });
   }
 
