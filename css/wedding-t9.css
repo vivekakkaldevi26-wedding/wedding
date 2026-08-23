@@ -2278,20 +2278,20 @@ textarea:focus-visible {
 .wed9-countdown-grid {
   position: relative;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
-  gap: clamp(0.08rem, 0.7vw, 0.28rem);
-  width: min(100%, 24rem);
+  gap: clamp(0.35rem, 2vw, 0.85rem);
+  width: min(100%, 28rem);
   margin: 0 auto;
 }
 
 .wed9-countdown-sep {
   font-family: 'Cinzel', 'Cormorant Garamond', serif;
-  font-size: clamp(1.5rem, 7vw, 2.2rem);
+  font-size: clamp(1.4rem, 5vw, 2.1rem);
   font-weight: 400;
   line-height: 1;
-  color: #b09a72;
-  margin-top: 0.12em;
+  color: var(--wed9-gold);
+  margin-top: -0.6rem;
 }
 
 /* Units drift in one after another, left to right, once the section is in view. */
@@ -2316,33 +2316,43 @@ textarea:focus-visible {
 .wed9-countdown-grid > *:nth-child(7) { --delay: 780ms; }
 
 .wed9-countdown-cell {
-  flex: 0 0 auto;
-  padding: 0;
-  background: none;
-  border: 0;
+  flex: 1 1 0px;
+  min-width: clamp(3.6rem, 18vw, 5.2rem);
+  padding: 1.1rem 0.5rem 0.9rem;
+  background: rgba(255, 250, 242, 0.92);
+  border: 1px solid rgba(181, 150, 98, 0.45);
+  border-radius: 12px;
+  box-shadow: 0 8px 22px rgba(90, 73, 56, 0.09), inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.wed9-countdown-cell:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(90, 73, 56, 0.15);
 }
 
 .wed9-countdown-num {
   display: block;
   font-family: 'Cinzel', 'Cormorant Garamond', serif;
-  font-size: clamp(1.9rem, 9.5vw, 2.9rem);
-  font-weight: 400;
+  font-size: clamp(1.8rem, 7.5vw, 2.7rem);
+  font-weight: 500;
   font-variant-numeric: tabular-nums;
-  letter-spacing: -0.01em;
-  color: #3f3226;
+  letter-spacing: 0.02em;
+  color: #3f3022;
   line-height: 1;
 }
 
 .wed9-countdown-label {
   display: block;
-  margin-top: 0.7rem;
+  margin-top: 0.55rem;
   font-family: 'Nunito', sans-serif;
-  font-size: clamp(0.56rem, 2.3vw, 0.68rem);
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-indent: 0.1em;
+  font-size: clamp(0.58rem, 2.4vw, 0.68rem);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-indent: 0.14em;
   text-transform: uppercase;
-  color: #6b5a46;
+  color: #8a6a37;
 }
 
 /* ── Premium contact ── */
