@@ -1,0 +1,2608 @@
+/* Wedding Template T9 — ivory letter, champagne, antique gold */
+
+:root {
+  /* Locked to the viewport height at load by wedding-t9.js so mobile browser
+     chrome collapsing mid-scroll cannot resize the opening/hero session. */
+  --wed9-app-height: 100dvh;
+  --wed9-bg: #FBF1DF;
+  --wed9-bg-2: #F3E3C8;
+  --wed9-text: #5A4938;
+  --wed9-text-2: #887663;
+  --wed9-gold: #B59662;
+  --wed9-sage: #A8AA8C;
+  --wed9-line: #D9C6A8;
+  --wed9-paper: #fffaf2;
+  --wed9-shadow: rgba(90, 73, 56, 0.14);
+  --wed9-content-inset-x: clamp(1rem, 5vw, 1.6rem);
+  --wed9-content-max: min(94vw, 38rem);
+  --wed9-open-ms: 1.15s;
+  --wed9-open-side-ms: 1.65s;
+  --wed9-seal-glow-ms: 420ms;
+  --wed9-hero-video-start-ms: 700ms;
+  --wed9-paper-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23p)' opacity='0.62'/%3E%3C/svg%3E");
+  --wed9-paper-fibers:
+    repeating-linear-gradient(0deg, rgba(120, 99, 74, 0.09) 0 1px, transparent 1px 4px),
+    repeating-linear-gradient(90deg, rgba(120, 99, 74, 0.075) 0 1px, transparent 1px 5px);
+}
+
+html,
+body {
+  margin: 0;
+  height: var(--wed9-app-height);
+  overflow: hidden;
+  background: var(--wed9-bg);
+  color: var(--wed9-text);
+  font-family: 'Nunito', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wed9-page {
+  position: relative;
+  width: 100%;
+  height: var(--wed9-app-height);
+  overflow: hidden;
+}
+
+.wed9-session {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.wed9-session.is-active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+/* ── Opening loader ── */
+
+.wed9-opening-loader {
+  position: absolute;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background:
+    radial-gradient(ellipse at 18% 16%, rgba(243, 227, 200, 0.7), transparent 42%),
+    radial-gradient(ellipse at 84% 78%, rgba(181, 150, 98, 0.16), transparent 46%),
+    var(--wed9-bg);
+  transition: opacity 0.55s ease, visibility 0.55s ease;
+}
+
+.wed9-opening-loader.is-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.wed9-opening-loader-card {
+  position: relative;
+  width: min(88vw, 20.5rem);
+  padding: 2rem 1.45rem 1.55rem;
+  border-radius: 12px;
+  text-align: center;
+  color: var(--wed9-text);
+  background-image: var(--wed9-paper-grain), linear-gradient(180deg, var(--wed9-paper), #f6ead6);
+  background-blend-mode: soft-light, normal;
+  border: 1px solid var(--wed9-line);
+  box-shadow:
+    0 16px 36px rgba(90, 73, 56, 0.16),
+    inset 0 0 0 1px rgba(255, 248, 238, 0.75);
+  overflow: hidden;
+}
+
+.wed9-opening-loader-card::before,
+.wed9-opening-loader-card::after {
+  content: '';
+  position: absolute;
+  width: 2.4rem;
+  height: 2.4rem;
+  border: 1.5px solid rgba(181, 150, 98, 0.4);
+  pointer-events: none;
+}
+
+.wed9-opening-loader-card::before {
+  top: 0.7rem;
+  left: 0.7rem;
+  border-right: 0;
+  border-bottom: 0;
+  border-top-left-radius: 4px;
+}
+
+.wed9-opening-loader-card::after {
+  right: 0.7rem;
+  bottom: 0.7rem;
+  border-left: 0;
+  border-top: 0;
+  border-bottom-right-radius: 4px;
+}
+
+.wed9-opening-loader-bloom {
+  position: relative;
+  width: 3.4rem;
+  height: 3.4rem;
+  margin: 0 auto 0.85rem;
+}
+
+.wed9-opening-loader-bloom span {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0.85rem;
+  height: 1.2rem;
+  margin: -0.6rem 0 0 -0.42rem;
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  background: linear-gradient(180deg, #f3e3c8, var(--wed9-gold));
+  transform-origin: 50% 120%;
+  transform: rotate(var(--wed9-petal-rot, 0deg)) translateY(-0.7rem);
+  animation: wed9LoaderPetal 1.6s ease-in-out infinite;
+}
+
+.wed9-opening-loader-bloom span:nth-child(1) { --wed9-petal-rot: 0deg; animation-delay: 0s; }
+.wed9-opening-loader-bloom span:nth-child(2) { --wed9-petal-rot: 72deg; animation-delay: 0.12s; }
+.wed9-opening-loader-bloom span:nth-child(3) { --wed9-petal-rot: 144deg; animation-delay: 0.24s; }
+.wed9-opening-loader-bloom span:nth-child(4) { --wed9-petal-rot: 216deg; animation-delay: 0.36s; }
+.wed9-opening-loader-bloom span:nth-child(5) { --wed9-petal-rot: 288deg; animation-delay: 0.48s; }
+
+.wed9-opening-loader-bloom::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0.55rem;
+  height: 0.55rem;
+  margin: -0.28rem 0 0 -0.28rem;
+  border-radius: 50%;
+  background: var(--wed9-gold);
+  box-shadow: 0 0 10px rgba(181, 150, 98, 0.45);
+}
+
+@keyframes wed9LoaderPetal {
+  0%, 100% { opacity: 0.55; transform: rotate(var(--wed9-petal-rot, 0deg)) translateY(-0.55rem) scale(0.92); }
+  50% { opacity: 1; transform: rotate(var(--wed9-petal-rot, 0deg)) translateY(-0.82rem) scale(1); }
+}
+
+.wed9-opening-loader-eyebrow {
+  margin: 0;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--wed9-gold);
+}
+
+.wed9-opening-loader-text {
+  margin: 0.45rem 0 1rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.15rem, 4.4vw, 1.45rem);
+  font-style: italic;
+  font-weight: 600;
+  color: var(--wed9-text);
+  letter-spacing: 0.02em;
+}
+
+.wed9-opening-loader-bar {
+  width: 100%;
+  height: 0.48rem;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(181, 150, 98, 0.16);
+  box-shadow: inset 0 0 0 1px rgba(181, 150, 98, 0.12);
+}
+
+.wed9-opening-loader-fill {
+  display: block;
+  width: 0%;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #d4b98a, var(--wed9-gold) 55%, #9d7f4e);
+  transition: width 0.24s ease;
+}
+
+.wed9-opening-loader-hint {
+  margin: 0.85rem 0 0;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 0.92rem;
+  color: var(--wed9-text-2);
+}
+
+/* ── Variant chooser (showcase page only) ── */
+
+.wed9-session-choose {
+  z-index: 40;
+  display: grid;
+  place-items: center;
+  padding: 1.6rem 1.1rem;
+  background:
+    radial-gradient(120% 80% at 50% 0%, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0) 62%),
+    var(--wed9-bg);
+  transition: opacity 0.45s ease;
+}
+
+.wed9-session-choose.is-leaving {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.wed9-choose-card {
+  position: relative;
+  width: min(92vw, 24rem);
+  padding: 2.3rem 1.5rem 1.9rem;
+  border: 1px solid var(--wed9-line);
+  border-radius: 1.25rem;
+  text-align: center;
+  background-image: var(--wed9-paper-grain), linear-gradient(180deg, var(--wed9-paper), #f6ead6);
+  background-blend-mode: soft-light, normal;
+  box-shadow: 0 26px 64px rgba(90, 73, 56, 0.18);
+  animation: wed9ChooseRise 0.7s ease both;
+}
+
+.wed9-choose-card::after {
+  content: '';
+  position: absolute;
+  inset: 0.4rem;
+  border: 1px solid rgba(181, 150, 98, 0.32);
+  border-radius: 0.95rem;
+  pointer-events: none;
+}
+
+.wed9-choose-title {
+  margin: 0;
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 500;
+  font-size: clamp(1.9rem, 7.5vw, 2.4rem);
+  letter-spacing: 0.04em;
+  color: var(--wed9-text);
+}
+
+.wed9-choose-rule {
+  display: block;
+  width: 3.2rem;
+  height: 1px;
+  margin: 0.9rem auto 1.6rem;
+  background: linear-gradient(90deg, transparent, var(--wed9-gold), transparent);
+}
+
+.wed9-choose-actions {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.wed9-choose-btn {
+  display: block;
+  width: 100%;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--wed9-line);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.7);
+  color: var(--wed9-text);
+  font-family: 'Nunito', sans-serif;
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
+}
+
+.wed9-choose-btn:hover,
+.wed9-choose-btn:focus-visible {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(90, 73, 56, 0.16);
+}
+
+.wed9-choose-btn-name {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.wed9-choose-btn-desc {
+  display: block;
+  margin-top: 0.3rem;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: var(--wed9-text-2);
+}
+
+.wed9-choose-btn-price {
+  display: block;
+  margin-top: 0.4rem;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--wed9-text-2);
+}
+
+.wed9-choose-btn.is-premium {
+  border-color: rgba(181, 150, 98, 0.55);
+  background: linear-gradient(135deg, #fffaf2, #f6e8d0 58%, #f0dcbd);
+  color: var(--wed9-text);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.55);
+}
+
+.wed9-choose-btn.is-premium:hover,
+.wed9-choose-btn.is-premium:focus-visible {
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.55), 0 12px 26px rgba(181, 150, 98, 0.28);
+}
+
+.wed9-choose-btn.is-premium .wed9-choose-btn-desc {
+  color: #8a6a3c;
+}
+
+.wed9-choose-btn.is-premium .wed9-choose-btn-price {
+  color: var(--wed9-gold);
+}
+
+@keyframes wed9ChooseRise {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* Opt-in: slower envelope open (client body class only). */
+body.wed9-open-slow {
+  --wed9-open-ms: 2s;
+  --wed9-open-side-ms: 2.85s;
+  --wed9-seal-glow-ms: 720ms;
+  --wed9-hero-video-start-ms: 1200ms;
+}
+
+body.wed9-open-slow .wed9-seal {
+  transition:
+    transform 0.9s cubic-bezier(0.22, 0.61, 0.36, 1),
+    opacity 1.1s ease,
+    filter 0.7s ease;
+}
+
+/* ── Opening: four letter flaps + seal ── */
+
+.wed9-session-opening {
+  z-index: 30;
+  background: transparent;
+}
+
+.wed9-opening-stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  /* Ivory only while sealed, so the rounded flap corners do not show gaps. */
+  background-color: var(--wed9-bg);
+  transition: background-color 0.4s ease;
+}
+
+.wed9-session-opening.is-opening .wed9-opening-stage {
+  background-color: transparent;
+}
+
+.wed9-flap {
+  position: absolute;
+  z-index: 2;
+  overflow: hidden;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform var(--wed9-open-ms) cubic-bezier(0.45, 0.05, 0.2, 1);
+  will-change: transform;
+}
+
+/*
+ * Flap art carries its own shape and gold trim in the alpha channel, and each PNG
+ * ships with transparent margin, so every image is sized past its flap box to make
+ * the paper itself span the box edge to edge.
+ */
+.wed9-flap img {
+  display: block;
+  flex: none;
+  max-width: none;
+  object-fit: fill;
+  object-position: center;
+}
+
+.wed9-flap-top {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 58%;
+}
+
+.wed9-flap-top img {
+  width: 107.7%;
+  height: 167.4%;
+  transform: translateY(0.46%);
+  filter: drop-shadow(0 -3px 9px rgba(90, 73, 56, 0.32));
+}
+
+.wed9-flap-bottom {
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 58%;
+}
+
+.wed9-flap-bottom img {
+  width: 107.7%;
+  height: 167.4%;
+  transform: rotate(180deg) translateY(0.46%);
+  filter: drop-shadow(0 -3px 9px rgba(90, 73, 56, 0.32));
+}
+
+.wed9-flap-left {
+  top: 0;
+  left: 0;
+  width: 46%;
+  height: 100%;
+  z-index: 3;
+  transition-duration: var(--wed9-open-side-ms);
+}
+
+.wed9-flap-left img {
+  width: calc(var(--wed9-app-height) * 1.078);
+  height: calc(46vw * 1.236);
+  transform: rotate(-90deg) translateY(-1.68%);
+  filter: drop-shadow(0 -3px 9px rgba(90, 73, 56, 0.32));
+}
+
+.wed9-flap-right {
+  top: 0;
+  right: 0;
+  width: 46%;
+  height: 100%;
+  z-index: 3;
+  transition-duration: var(--wed9-open-side-ms);
+}
+
+.wed9-flap-right img {
+  width: calc(var(--wed9-app-height) * 1.078);
+  height: calc(46vw * 1.236);
+  transform: rotate(90deg) translateY(-1.68%);
+  filter: drop-shadow(0 -3px 9px rgba(90, 73, 56, 0.32));
+}
+
+.wed9-session-opening.is-opening .wed9-flap-top {
+  transform: translateY(-112%);
+}
+
+.wed9-session-opening.is-opening .wed9-flap-bottom {
+  transform: translateY(112%);
+}
+
+.wed9-session-opening.is-opening .wed9-flap-left {
+  transform: translateX(-112%);
+}
+
+.wed9-session-opening.is-opening .wed9-flap-right {
+  transform: translateX(112%);
+}
+
+.wed9-seal {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 4;
+  width: min(38vw, 9.4rem);
+  height: min(38vw, 9.4rem);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    transform 0.55s cubic-bezier(0.22, 0.61, 0.36, 1),
+    opacity 0.7s ease,
+    filter 0.45s ease;
+}
+
+.wed9-seal-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 18px rgba(26, 22, 18, 0.35));
+  pointer-events: none;
+}
+
+.wed9-seal.is-glowing {
+  transform: translate(-50%, -50%) scale(1.12);
+  filter: drop-shadow(0 0 10px #B59662) drop-shadow(0 0 26px rgba(181, 150, 98, 0.85));
+}
+
+.wed9-seal.is-fading {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(1.28);
+  pointer-events: none;
+}
+
+.wed9-opening-hint {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 8%;
+  z-index: 5;
+  margin: 0;
+  text-align: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 1.05rem;
+  letter-spacing: 0.12em;
+  color: var(--wed9-text);
+  text-shadow: 0 1px 8px rgba(251, 241, 223, 0.85);
+  animation: wed9HintPulse 2.4s ease-in-out infinite;
+}
+
+.wed9-session-opening.is-opening .wed9-opening-hint {
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+@keyframes wed9HintPulse {
+  0%, 100% { opacity: 0.72; }
+  50% { opacity: 1; }
+}
+
+/* ── Invite scroll shell ── */
+
+.wed9-session-invite {
+  z-index: 1;
+  background: var(--wed9-bg);
+}
+
+.wed9-scroll-page {
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+.wed9-scroll-page.is-scroll-locked {
+  overflow: hidden;
+  touch-action: none;
+}
+
+.wed9-scroll-inner {
+  position: relative;
+}
+
+.wed9-mute-btn {
+  position: fixed;
+  top: 0.85rem;
+  right: 0.85rem;
+  z-index: 20;
+  width: 2.4rem;
+  height: 2.4rem;
+  border: 1px solid rgba(181, 150, 98, 0.4);
+  border-radius: 50%;
+  background: rgba(251, 241, 223, 0.9);
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 4px 14px var(--wed9-shadow);
+  transition: transform 0.2s ease, opacity 0.3s ease;
+}
+
+.wed9-mute-btn[aria-hidden="true"] {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.wed9-mute-btn:not([aria-hidden="true"]) {
+  opacity: 1;
+}
+
+.wed9-mute-btn:active {
+  transform: scale(0.94);
+}
+
+/* ── Petals ── */
+
+.wed9-petals {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 12;
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 1.2s ease, visibility 1.2s ease;
+}
+
+.wed9-petals.is-active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.wed9-petal {
+  position: absolute;
+  top: -8vh;
+  border-radius: 50% 50% 50% 0;
+  box-shadow: inset -1px -1px 2px rgba(255, 255, 255, 0.45);
+  opacity: 0;
+  animation: wed9PetalFall linear infinite;
+  will-change: transform, opacity;
+}
+
+@keyframes wed9PetalFall {
+  0% {
+    transform: translate3d(0, -8vh, 0) rotate(0deg);
+    opacity: 0;
+  }
+  6% {
+    opacity: var(--petal-opacity, 0.72);
+  }
+  22% {
+    transform: translate3d(calc(var(--petal-drift) * 0.28), 22vh, 0) rotate(calc(var(--petal-spin) * 0.22));
+  }
+  48% {
+    transform: translate3d(calc(var(--petal-drift) * 0.58), 48vh, 0) rotate(calc(var(--petal-spin) * 0.5));
+  }
+  74% {
+    transform: translate3d(calc(var(--petal-drift) * 0.82), 74vh, 0) rotate(calc(var(--petal-spin) * 0.76));
+  }
+  94% {
+    opacity: var(--petal-opacity, 0.72);
+  }
+  100% {
+    transform: translate3d(var(--petal-drift), 108vh, 0) rotate(var(--petal-spin));
+    opacity: 0;
+  }
+}
+
+/* ── Heart trail (pointer, tap, scroll) ── */
+
+.wed9-hearts {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.wed9-heart {
+  position: absolute;
+  width: var(--size, 9px);
+  height: var(--size, 9px);
+  margin: calc(var(--size, 9px) / -2);
+  color: var(--tint, #d9c6a8);
+  opacity: 0;
+  animation: wed9HeartTrail 0.82s ease-out forwards;
+  will-change: transform, opacity;
+}
+
+.wed9-heart svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+  filter: drop-shadow(0 0 6px rgba(243, 227, 200, 0.7));
+}
+
+@keyframes wed9HeartTrail {
+  0% {
+    transform: translate3d(0, 0, 0) scale(0.7) rotate(0deg);
+    opacity: 0.92;
+  }
+  100% {
+    transform: translate3d(var(--dx, 0px), var(--dy, -24px), 0) scale(1.15) rotate(var(--tilt, 0deg));
+    opacity: 0;
+  }
+}
+
+/* ── Shared section ── */
+
+.wed9-section {
+  position: relative;
+  padding: clamp(2.2rem, 7vh, 3.4rem) var(--wed9-content-inset-x);
+}
+
+/* Hand-made paper grain laid over every scrolling section. */
+.wed9-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: var(--wed9-paper-grain), var(--wed9-paper-fibers);
+  background-size: 200px 200px, auto, auto;
+  mix-blend-mode: multiply;
+  opacity: 0.72;
+}
+
+.wed9-section-title {
+  margin: 0 0 1.4rem;
+  text-align: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 600;
+  font-size: clamp(1.7rem, 6vw, 2.15rem);
+  letter-spacing: 0.08em;
+  color: var(--wed9-text);
+}
+
+.wed9-reveal {
+  opacity: 0;
+  transform: translateY(1.1rem);
+  transition: opacity 0.85s ease, transform 0.85s ease;
+}
+
+.wed9-reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+.wed9-premium-only {
+  display: none;
+}
+
+body[data-variant="premium"] .wed9-premium-only {
+  display: block;
+}
+
+/* ── Hero ── */
+
+.wed9-hero {
+  position: relative;
+  height: var(--wed9-app-height);
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #1c1814;
+}
+
+.wed9-hero-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.wed9-hero-veil {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(28, 24, 20, 0.28) 0%, rgba(28, 24, 20, 0.18) 40%, rgba(28, 24, 20, 0.42) 100%);
+  pointer-events: none;
+}
+
+.wed9-hero-content {
+  position: relative;
+  z-index: 2;
+  width: min(92vw, 28rem);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 12vh 1rem 10vh;
+  box-sizing: border-box;
+}
+
+.wed9-hero-lines {
+  position: absolute;
+  left: 1rem;
+  right: 1rem;
+  top: 42%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5em;
+  min-height: 4.5rem;
+}
+
+.wed9-hero-line {
+  margin: 0;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: clamp(1.3rem, 5.4vw, 1.85rem);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: #fbf1df;
+  text-shadow: 0 2px 18px rgba(28, 24, 20, 0.45);
+}
+
+.wed9-hero-love {
+  display: block;
+  flex: none;
+  width: clamp(1.15rem, 4.6vw, 1.55rem);
+  color: #ffffff;
+  filter: drop-shadow(0 2px 14px rgba(28, 24, 20, 0.45));
+}
+
+.wed9-hero-love svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.wed9-hero-line,
+.wed9-hero-love {
+  opacity: 0;
+  transform: translateY(0.4rem);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+  pointer-events: none;
+}
+
+.wed9-hero-line.is-in,
+.wed9-hero-love.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+.wed9-hero-line.is-out,
+.wed9-hero-love.is-out {
+  opacity: 0;
+  transform: translateY(-0.35rem);
+}
+
+.wed9-hero-invite {
+  opacity: 0;
+  transform: translateY(0.6rem);
+  transition: opacity 0.9s ease, transform 0.9s ease;
+  pointer-events: none;
+}
+
+.wed9-hero-invite.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+.wed9-hero-invite-msg {
+  position: absolute;
+  left: 50%;
+  top: 27%;
+  transform: translateX(-50%);
+  margin: 0;
+  max-width: min(36ch, 92vw);
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: clamp(1.05rem, 3.8vw, 1.28rem);
+  line-height: 1.45;
+  color: #4a3a2b;
+  letter-spacing: 0.04em;
+  text-shadow: 0 1px 10px rgba(251, 241, 223, 0.55);
+  text-wrap: balance;
+  pointer-events: none;
+}
+
+.wed9-hero-word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.45rem);
+  filter: blur(2px);
+  transition: opacity 0.7s ease, transform 0.7s ease, filter 0.7s ease;
+  transition-delay: var(--delay, 0ms);
+}
+
+.wed9-hero-invite-msg.is-in .wed9-hero-word {
+  opacity: 1;
+  transform: none;
+  filter: blur(0);
+}
+
+.wed9-hero-names {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+.wed9-hero-groom,
+.wed9-hero-bride {
+  font-family: 'Great Vibes', cursive;
+  font-size: clamp(3.1rem, 13vw, 4.6rem);
+  line-height: 1.05;
+  color: #fff8ea;
+  text-shadow: 0 2px 16px rgba(28, 24, 20, 0.4);
+}
+
+.wed9-hero-amp {
+  font-family: 'Great Vibes', cursive;
+  font-style: normal;
+  font-size: clamp(1.55rem, 5.6vw, 2.05rem);
+  line-height: 1;
+  color: var(--wed9-bg-2);
+  text-shadow: 0 2px 12px rgba(28, 24, 20, 0.45);
+  letter-spacing: 0.04em;
+  margin: 0.85rem 0 0.95rem;
+  opacity: 0;
+  transform: scale(0.4);
+  transition:
+    opacity 0.6s ease,
+    transform 0.75s cubic-bezier(0.2, 0.9, 0.3, 1.3);
+  transition-delay: var(--delay, 0ms);
+}
+
+.wed9-hero-names.wed9-fly-active .wed9-hero-amp {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.wed9-fly-line {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 1em;
+}
+
+.wed9-fly-letter {
+  display: inline-block;
+  opacity: 0;
+  transform: translateX(var(--sx, 0));
+  filter: blur(2px);
+  transition:
+    transform 1.4s cubic-bezier(0.22, 0.61, 0.36, 1),
+    opacity 1.3s ease,
+    filter 1.3s ease;
+  transition-delay: var(--delay, 0ms);
+  will-change: transform, opacity;
+}
+
+.wed9-hero-names.wed9-fly-active .wed9-fly-letter {
+  opacity: 1;
+  transform: translateX(0);
+  filter: blur(0);
+}
+
+.wed9-hero-footer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 3%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2.8rem;
+  opacity: 0;
+  transform: translateY(0.7rem);
+  transition: opacity 0.9s ease 0.1s, transform 0.9s ease 0.1s;
+}
+
+.wed9-hero-footer.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+.wed9-hero-date {
+  margin: 0;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 600;
+  font-size: clamp(0.8rem, 2.9vw, 0.95rem);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #f3e3c8;
+  text-shadow: 0 1px 10px rgba(28, 24, 20, 0.4);
+}
+
+.wed9-scroll-hint {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  color: #fbf1df;
+  opacity: 0.85;
+  animation: wed9ScrollFloat 2.2s ease-in-out infinite;
+  transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+
+.wed9-scroll-hint.is-hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+@keyframes wed9ScrollFloat {
+  0%, 100% { transform: translateY(-4px); }
+  50% { transform: translateY(4px); }
+}
+
+.wed9-scroll-hint-label {
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.68rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+}
+
+.wed9-scroll-hint-chevron {
+  width: 0.7rem;
+  height: 0.7rem;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(45deg);
+  animation: wed9ScrollBounce 1.6s ease-in-out infinite;
+}
+
+@keyframes wed9ScrollBounce {
+  0%, 100% { transform: rotate(45deg) translate(0, 0); opacity: 0.55; }
+  50% { transform: rotate(45deg) translate(2px, 2px); opacity: 1; }
+}
+
+/* ── Date card ── */
+
+.wed9-datecard-section {
+  background: linear-gradient(180deg, var(--wed9-bg) 0%, var(--wed9-bg-2) 100%);
+  padding-top: 2.6rem;
+  padding-bottom: 0;
+}
+
+/* Masked so the black calligraphy artwork picks up the warm brown theme colour. */
+.wed9-datecard-title {
+  display: block;
+  width: min(50vw, 11.5rem);
+  aspect-ratio: 357 / 279;
+  /* The frame art has ~15% transparent padding, so pull the title down into it. */
+  margin: 0 auto min(-11vw, -3rem);
+  background-color: #3f3226;
+  -webkit-mask: url("https://firebasestorage.googleapis.com/v0/b/my-bel0ved.firebasestorage.app/o/templates%2Fshared%2Fimages%2Fwedding%20t9%2Fsave%20date.png?alt=media&token=3ba89b8a-851a-4b25-93a9-e3d69e064452") no-repeat center / contain;
+  mask: url("https://firebasestorage.googleapis.com/v0/b/my-bel0ved.firebasestorage.app/o/templates%2Fshared%2Fimages%2Fwedding%20t9%2Fsave%20date.png?alt=media&token=3ba89b8a-851a-4b25-93a9-e3d69e064452") no-repeat center / contain;
+}
+
+.wed9-datecard-frame {
+  position: relative;
+  width: min(80vw, 21rem);
+  /* Trims the frame art's transparent bottom padding. */
+  margin: 0 auto min(-10vw, -2.6rem);
+  aspect-ratio: 675 / 1200;
+}
+
+.wed9-datecard-art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.wed9-datecard {
+  position: absolute;
+  z-index: 2;
+  left: 21%;
+  right: 21%;
+  top: 27%;
+  bottom: 35%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #3f3226;
+}
+
+.wed9-datecard > * {
+  opacity: 0;
+  transform: translateY(0.5rem);
+  transition: opacity 0.85s ease, transform 0.85s ease;
+  transition-delay: var(--delay, 0ms);
+}
+
+.wed9-datecard.is-centered > * {
+  opacity: 1;
+  transform: none;
+}
+
+.wed9-datecard-day {
+  --delay: 200ms;
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-size: clamp(4.4rem, 22vw, 7rem);
+  line-height: 0.9;
+  letter-spacing: 0.02em;
+}
+
+.wed9-datecard-month {
+  --delay: 620ms;
+  margin-top: 1.3rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 600;
+  font-size: clamp(1.15rem, 4.2vw, 1.6rem);
+  letter-spacing: 0.28em;
+  text-indent: 0.28em;
+  text-transform: uppercase;
+  color: #2b1f14;
+}
+
+.wed9-datecard-year {
+  --delay: 940ms;
+  margin-top: 0.4rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 600;
+  font-size: clamp(1.15rem, 4.2vw, 1.6rem);
+  letter-spacing: 0.28em;
+  text-indent: 0.28em;
+  color: #59421f;
+}
+
+.wed9-datecard-rule {
+  --delay: 1240ms;
+  display: block;
+  width: clamp(5.5rem, 32%, 8rem);
+  margin: 0.95rem 0 0.85rem;
+  color: #a98a5c;
+}
+
+.wed9-datecard-rule svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.wed9-datecard-sub {
+  --delay: 1520ms;
+  margin: 0;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: clamp(0.92rem, 3.4vw, 1.08rem);
+  letter-spacing: 0.06em;
+  color: #4d3c2c;
+}
+
+/* ── Premium quote (framed art, full width) ── */
+
+.wed9-quote {
+  padding: 0;
+  background: var(--wed9-bg);
+}
+
+.wed9-quote.wed9-section::before {
+  content: none;
+}
+
+.wed9-quote-frame {
+  position: relative;
+  width: 100%;
+}
+
+.wed9-quote-art {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.wed9-quote-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 84%;
+  margin: 0;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  text-wrap: balance;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: clamp(1.08rem, 4.6vw, 1.95rem);
+  line-height: 1.5;
+  color: #4d3c2c;
+}
+
+/* Each measured line keeps its slot from the start, so nothing reflows mid-type. */
+.wed9-quote-line {
+  display: block;
+  min-height: 1.5em;
+  white-space: pre-wrap;
+}
+
+.wed9-quote-caret {
+  display: inline-block;
+  width: 1px;
+  height: 1em;
+  margin-left: 0.08em;
+  vertical-align: -0.14em;
+  background: var(--wed9-gold);
+  animation: wed9QuoteCaret 0.9s steps(1, end) infinite;
+}
+
+.wed9-quote-caret.is-done {
+  display: none;
+}
+
+@keyframes wed9QuoteCaret {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+/* ── Premium photos (scroll-pinned stack) ── */
+
+.wed9-photos {
+  padding: 0;
+  background: var(--wed9-bg);
+}
+
+.wed9-photos.wed9-section::before {
+  content: none;
+}
+
+.wed9-photos-track {
+  position: relative;
+  height: calc(var(--wed9-app-height) * 2.8);
+}
+
+.wed9-photos-stage {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  height: var(--wed9-app-height);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.1rem;
+  padding: 1.1rem var(--wed9-content-inset-x) 1.3rem;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 70% at 50% -10%, rgba(255, 253, 246, 0.95), transparent 60%),
+    radial-gradient(90% 55% at 12% 22%, rgba(243, 227, 200, 0.75), transparent 62%),
+    radial-gradient(90% 55% at 88% 82%, rgba(233, 216, 187, 0.7), transparent 62%),
+    linear-gradient(180deg, var(--wed9-bg) 0%, #f6ead4 55%, var(--wed9-bg-2) 100%);
+}
+
+.wed9-photos-stage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: var(--wed9-paper-grain), var(--wed9-paper-fibers);
+  background-size: 200px 200px, auto, auto;
+  mix-blend-mode: multiply;
+  opacity: 0.72;
+}
+
+/* Corner florals + warm vignette so the pinned stage never reads as a flat wash. */
+.wed9-photos-stage::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    url("https://firebasestorage.googleapis.com/v0/b/my-bel0ved.firebasestorage.app/o/templates%2Fshared%2Fimages%2Fwedding%20t9%2Fivory%20flower%203.png?alt=media&token=65df797a-0bbc-4d83-b6e0-d4cea2d32644"),
+    url("https://firebasestorage.googleapis.com/v0/b/my-bel0ved.firebasestorage.app/o/templates%2Fshared%2Fimages%2Fwedding%20t9%2Fchampane%20flower.png?alt=media&token=6f9d148b-7855-461b-9828-463c607119e6"),
+    radial-gradient(115% 80% at 50% 50%, transparent 58%, rgba(120, 96, 62, 0.14) 100%);
+  background-repeat: no-repeat, no-repeat, no-repeat;
+  background-position: -14% -6%, 112% 104%, center;
+  background-size: min(58vw, 15rem) auto, min(56vw, 14rem) auto, cover;
+  opacity: 0.5;
+}
+
+.wed9-photos-stage > * {
+  position: relative;
+  z-index: 1;
+}
+
+.wed9-photos-stage .wed9-section-title {
+  position: relative;
+  margin: 0;
+  padding-bottom: 0.85rem;
+  font-size: clamp(1.55rem, 5.6vw, 1.95rem);
+  letter-spacing: 0.12em;
+}
+
+.wed9-photos-stage .wed9-section-title::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: clamp(3.5rem, 22vw, 5.5rem);
+  height: 1px;
+  transform: translateX(-50%);
+  background: linear-gradient(90deg, transparent, var(--wed9-gold), transparent);
+}
+
+.wed9-photos-stack {
+  --card-w: min(82vw, 22rem);
+  /* Height also caps against the pinned stage so all four frames stay visible. */
+  --card-h: min(calc(var(--card-w) * 0.72), calc(var(--wed9-app-height) * 0.28));
+  --step: calc(var(--card-h) * 0.6);
+  position: relative;
+  width: var(--card-w);
+  height: calc(var(--card-h) + 3 * var(--step));
+}
+
+.wed9-photo-card {
+  --t: 0;
+  --i: 0;
+  --from: -85vw;
+  --settle-x: -0.55rem;
+  --tilt: -1.5deg;
+  position: absolute;
+  top: calc(var(--i, 0) * var(--step));
+  left: 50%;
+  z-index: calc(var(--i, 0) + 1);
+  box-sizing: border-box;
+  width: var(--card-w);
+  height: var(--card-h);
+  margin: 0 0 0 calc(var(--card-w) / -2);
+  padding: 0.55rem;
+  background:
+    linear-gradient(145deg, #fffdf7 0%, #fdf6e9 52%, #f7ecd9 100%);
+  border: 1px solid rgba(181, 150, 98, 0.5);
+  box-shadow:
+    0 1px 2px rgba(90, 73, 56, 0.1),
+    0 0.55rem 1.4rem rgba(90, 73, 56, 0.16),
+    0 1.4rem 2.6rem rgba(90, 73, 56, 0.1);
+  opacity: var(--t);
+  transform:
+    translateX(calc(var(--settle-x) + (1 - var(--t)) * var(--from)))
+    rotate(var(--tilt))
+    scale(calc(0.92 + 0.08 * var(--t)));
+  will-change: transform, opacity;
+}
+
+.wed9-photo-card:nth-child(2) {
+  --i: 1;
+  --from: 85vw;
+  --settle-x: 0.6rem;
+  --tilt: 1.5deg;
+}
+
+.wed9-photo-card:nth-child(3) {
+  --i: 2;
+  --settle-x: -0.35rem;
+  --tilt: 1.2deg;
+}
+
+.wed9-photo-card:nth-child(4) {
+  --i: 3;
+  --from: 85vw;
+  --settle-x: 0.45rem;
+  --tilt: -1.35deg;
+}
+
+/* Double-mount look: a gold hairline in the mat and a soft line hugging the print. */
+.wed9-photo-card::after {
+  content: "";
+  position: absolute;
+  inset: 0.24rem;
+  border: 1px solid rgba(181, 150, 98, 0.38);
+  pointer-events: none;
+}
+
+.wed9-photo-card::before {
+  content: "";
+  position: absolute;
+  inset: 0.55rem;
+  border: 1px solid rgba(90, 73, 56, 0.18);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.wed9-photo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.wed9-photo-card.is-empty {
+  display: none;
+}
+
+/* ── Details ── */
+
+.wed9-details {
+  background: var(--wed9-bg);
+  overflow: hidden;
+}
+
+.wed9-details-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.38;
+  pointer-events: none;
+}
+
+.wed9-details-flower {
+  position: absolute;
+  width: min(42vw, 10rem);
+  height: auto;
+  pointer-events: none;
+  opacity: 0.88;
+  z-index: 1;
+}
+
+.wed9-details-flower-tl {
+  top: -1.2rem;
+  left: -1.4rem;
+}
+
+.wed9-details-flower-br {
+  bottom: -1.4rem;
+  right: -1.5rem;
+}
+
+.wed9-details-card {
+  position: relative;
+  z-index: 2;
+  width: min(100%, 26rem);
+  margin: 0 auto;
+  padding: 1.6rem 1.15rem 1.4rem;
+  text-align: center;
+  background: linear-gradient(180deg, rgba(255, 250, 242, 0.78), rgba(251, 241, 223, 0.88));
+  border: 1px solid rgba(217, 198, 168, 0.7);
+  box-shadow: 0 12px 32px var(--wed9-shadow);
+}
+
+.wed9-details-greeting,
+.wed9-details-welcome,
+.wed9-details-person,
+.wed9-details-divider,
+.wed9-details-meta {
+  opacity: 0;
+  transition: opacity 0.9s ease, transform 0.9s ease;
+  transition-delay: var(--delay, 0ms);
+}
+
+.wed9-details-greeting,
+.wed9-details-welcome,
+.wed9-details-divider,
+.wed9-details-meta {
+  transform: translateY(1.3rem);
+}
+
+.wed9-details-person-groom {
+  --delay: 620ms;
+  transform: translateX(-2.2rem);
+}
+
+.wed9-details-person-bride {
+  --delay: 860ms;
+  transform: translateX(2.2rem);
+}
+
+.wed9-details-card.is-centered .wed9-details-greeting,
+.wed9-details-card.is-centered .wed9-details-welcome,
+.wed9-details-card.is-centered .wed9-details-person,
+.wed9-details-card.is-centered .wed9-details-divider,
+.wed9-details-card.is-centered .wed9-details-meta {
+  opacity: 1;
+  transform: none;
+}
+
+.wed9-details-greeting {
+  --delay: 120ms;
+  display: block;
+  margin-bottom: 0.75rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(0.84rem, 3.1vw, 0.98rem);
+  letter-spacing: 0.22em;
+  text-indent: 0.22em;
+  text-transform: uppercase;
+  color: var(--wed9-gold);
+}
+
+.wed9-details-welcome {
+  --delay: 300ms;
+  max-width: 22rem;
+  margin: 0 auto 1.7rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1rem, 3.6vw, 1.16rem);
+  line-height: 1.75;
+  color: var(--wed9-text);
+}
+
+
+.wed9-details-role {
+  margin: 0 0 0.2rem;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.68rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--wed9-sage);
+}
+
+.wed9-details-name {
+  margin: 0 0 0.25rem;
+  font-family: 'Great Vibes', cursive;
+  font-size: clamp(2rem, 8vw, 2.55rem);
+  font-weight: 400;
+  color: var(--wed9-text);
+  line-height: 1.1;
+}
+
+.wed9-details-parents {
+  margin: 0;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.98rem;
+  color: var(--wed9-text-2);
+  line-height: 1.45;
+}
+
+.wed9-details-parents-prefix {
+  display: block;
+  font-style: italic;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.1rem;
+}
+
+.wed9-details-parent-line {
+  display: block;
+}
+
+.wed9-details-divider {
+  --delay: 740ms;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  margin: 0.95rem 0;
+}
+
+.wed9-details-divider-line {
+  width: 2.6rem;
+  height: 1px;
+  background: var(--wed9-line);
+}
+
+.wed9-details-divider-mark {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  color: var(--wed9-gold);
+}
+
+.wed9-details-meta {
+  --delay: 1080ms;
+  list-style: none;
+  margin: 1.4rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.wed9-details-meta-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0.55rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.02rem;
+  color: var(--wed9-text);
+  line-height: 1.35;
+}
+
+.wed9-details-icon {
+  flex: 0 0 1.2rem;
+  width: 1.2rem;
+  height: 1.2rem;
+  margin-top: 0.1rem;
+  color: var(--wed9-gold);
+}
+
+.wed9-details-icon svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* ── Timeline ── */
+
+.wed9-timeline {
+  background:
+    radial-gradient(ellipse at 80% 10%, rgba(168, 170, 140, 0.14), transparent 42%),
+    var(--wed9-bg-2);
+  overflow: hidden;
+}
+
+.wed9-timeline-flower {
+  position: absolute;
+  width: min(36vw, 8.5rem);
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.wed9-timeline-flower-l {
+  left: -1.6rem;
+  top: 1.2rem;
+}
+
+.wed9-timeline-flower-r {
+  right: -1.8rem;
+  bottom: 1rem;
+}
+
+.wed9-timeline-list {
+  list-style: none;
+  margin: 0 auto;
+  padding: 0.4rem 0 0.2rem;
+  width: min(100%, 22rem);
+  position: relative;
+}
+
+.wed9-timeline-item {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.4rem;
+  padding: 0.55rem 0;
+}
+
+/* One segment per gap, drawn from this dot down to the next one. */
+.wed9-timeline-item::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 1px;
+  height: 100%;
+  margin-left: -0.5px;
+  background: var(--wed9-gold);
+  transform: scaleY(0);
+  transform-origin: top center;
+  transition: transform 1.8s ease 1.1s;
+}
+
+.wed9-timeline-item:last-child::before {
+  content: none;
+}
+
+.wed9-timeline-list.is-centered .wed9-timeline-item::before {
+  transform: scaleY(1);
+}
+
+.wed9-timeline-item::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0.55rem;
+  height: 0.55rem;
+  margin-left: -0.28rem;
+  margin-top: -0.28rem;
+  border-radius: 50%;
+  background: var(--wed9-gold);
+  box-shadow: 0 0 0 4px rgba(181, 150, 98, 0.18);
+}
+
+/* Cards lean forward until the timeline hits the centre, then all stand up together. */
+.wed9-timeline-card {
+  padding: 0.7rem 0.8rem;
+  background: rgba(255, 250, 242, 0.78);
+  border: 1px solid var(--wed9-line);
+  box-shadow: 0 6px 16px rgba(90, 73, 56, 0.08);
+  transform: perspective(700px) rotateX(-58deg);
+  transform-origin: center top;
+  transition: transform 1s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.wed9-timeline-list.is-centered .wed9-timeline-card {
+  transform: perspective(760px) rotateX(0deg);
+}
+
+.wed9-timeline-item.is-left .wed9-timeline-card {
+  grid-column: 1;
+  text-align: right;
+}
+
+.wed9-timeline-item.is-right .wed9-timeline-card {
+  grid-column: 2;
+  text-align: left;
+}
+
+.wed9-timeline-title {
+  margin: 0 0 0.25rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.08rem;
+  font-weight: 600;
+  color: var(--wed9-text);
+}
+
+.wed9-timeline-meta {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--wed9-text-2);
+}
+
+.wed9-timeline-item.is-left .wed9-timeline-meta {
+  align-items: flex-end;
+}
+
+/* ── Venues ── */
+
+.wed9-venues {
+  background: var(--wed9-bg);
+}
+
+.wed9-venue-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.15rem;
+}
+
+.wed9-venue-tabs.is-single {
+  display: none;
+}
+
+.wed9-venue-tab {
+  border: 1px solid var(--wed9-line);
+  background: transparent;
+  color: #4d3c2c;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.92rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  padding: 0.4rem 1rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}
+
+.wed9-venue-tab.is-active {
+  background: var(--wed9-gold);
+  border-color: var(--wed9-gold);
+  color: #fffaf2;
+}
+
+.wed9-venue-panel {
+  display: none;
+}
+
+.wed9-venue-panel.is-active {
+  display: block;
+}
+
+/* Swapping tabs re-shows the panel, which restarts these entrance fades. */
+.wed9-venue-panel.is-active .wed9-venue-frame-wrap,
+.wed9-venue-panel.is-active .wed9-venue-card-title,
+.wed9-venue-panel.is-active .wed9-venue-address,
+.wed9-venue-panel.is-active .wed9-btn-map {
+  animation: wed9VenueFadeIn 0.55s ease both;
+}
+
+.wed9-venue-panel.is-active .wed9-venue-card-title {
+  animation-delay: 0.08s;
+}
+
+.wed9-venue-panel.is-active .wed9-venue-address {
+  animation-delay: 0.14s;
+}
+
+.wed9-venue-panel.is-active .wed9-btn-map {
+  animation-delay: 0.2s;
+}
+
+@keyframes wed9VenueFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.wed9-venue-panel-card {
+  position: relative;
+  width: min(100%, 24rem);
+  margin: 0 auto;
+  padding: 1.2rem 1rem 1.35rem;
+  text-align: center;
+}
+
+/* Fixed stage so venue arts of different ratios never shift the card layout. */
+.wed9-venue-frame-wrap {
+  position: relative;
+  width: min(78%, 16rem);
+  aspect-ratio: 1 / 1;
+  margin: 0 auto 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wed9-venue-frame {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.wed9-venue-card-title {
+  margin: 0 0 0.35rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.45rem, 4.5vw, 1.65rem);
+  font-weight: 600;
+  color: #3f3226;
+}
+
+.wed9-venue-address {
+  margin: 0 0 0.9rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: clamp(1.05rem, 3.4vw, 1.2rem);
+  font-weight: 600;
+  color: #4d3c2c;
+}
+
+.wed9-btn-map {
+  display: inline-block;
+  padding: 0.55rem 1.35rem;
+  border-radius: 999px;
+  border: 1px solid var(--wed9-gold);
+  color: #8a6a37;
+  text-decoration: none;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+.wed9-btn-map:hover,
+.wed9-btn-map:focus-visible {
+  background: var(--wed9-gold);
+  color: #fffaf2;
+}
+
+/* ── Premium wishes form (minimal) ── */
+
+.wed9-wishes {
+  background: var(--wed9-bg);
+  text-align: center;
+  overflow: hidden;
+}
+
+.wed9-wishes-flower {
+  position: absolute;
+  bottom: -1.5rem;
+  z-index: 0;
+  width: min(44vw, 11rem);
+  height: auto;
+  opacity: 0.62;
+  pointer-events: none;
+}
+
+/* Each corner drifts outward-and-up, then settles back — mirrored per side. */
+.wed9-wishes-flower-l {
+  left: -2.5rem;
+  transform: scaleX(-1);
+  animation: wed9WishFloatLeft 7s ease-in-out infinite alternate;
+}
+
+.wed9-wishes-flower-r {
+  right: -2.5rem;
+  animation: wed9WishFloatRight 7s ease-in-out infinite alternate;
+}
+
+@keyframes wed9WishFloatLeft {
+  from {
+    transform: scaleX(-1) translate(0, 0);
+  }
+  to {
+    transform: scaleX(-1) translate(0.5rem, -0.7rem);
+  }
+}
+
+@keyframes wed9WishFloatRight {
+  from {
+    transform: translate(0, 0);
+  }
+  to {
+    transform: translate(0.5rem, -0.7rem);
+  }
+}
+
+.wed9-wishes-sub,
+.wed9-wishes-form,
+.wed9-wishes-thanks,
+.wed9-wishes .wed9-section-title {
+  position: relative;
+  z-index: 1;
+}
+
+.wed9-wishes-sub {
+  margin: -0.9rem 0 1.9rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: clamp(0.98rem, 3.5vw, 1.12rem);
+  color: var(--wed9-text-2);
+}
+
+.wed9-wishes-form {
+  width: min(100%, 22rem);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.wed9-wishes-form.is-hidden {
+  display: none;
+}
+
+.wed9-wishes-field {
+  display: block;
+  text-align: left;
+}
+
+.wed9-wishes-label {
+  display: block;
+  margin-bottom: 0.45rem;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-indent: 0.2em;
+  text-transform: uppercase;
+  color: #8a7864;
+}
+
+.wed9-wishes-field input,
+.wed9-wishes-field textarea {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.5rem 0.1rem;
+  border: 0;
+  border-bottom: 1px solid var(--wed9-line);
+  border-radius: 0;
+  background: transparent;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.1rem;
+  color: var(--wed9-text);
+  resize: none;
+  transition: border-color 0.3s ease;
+}
+
+.wed9-wishes-field input::placeholder,
+.wed9-wishes-field textarea::placeholder {
+  color: rgba(136, 118, 99, 0.55);
+  font-style: italic;
+}
+
+.wed9-wishes-field input:focus,
+.wed9-wishes-field textarea:focus {
+  outline: none;
+  border-bottom-color: var(--wed9-gold);
+}
+
+/* Chrome/Safari paint a blue sheet over autofilled values — keep the field clear. */
+.wed9-wishes-field input:-webkit-autofill,
+.wed9-wishes-field input:-webkit-autofill:hover,
+.wed9-wishes-field input:-webkit-autofill:focus,
+.wed9-wishes-field input:autofill,
+.wed9-wishes-field textarea:-webkit-autofill,
+.wed9-wishes-field textarea:-webkit-autofill:hover,
+.wed9-wishes-field textarea:-webkit-autofill:focus,
+.wed9-wishes-field textarea:autofill {
+  -webkit-text-fill-color: var(--wed9-text);
+  caret-color: var(--wed9-text);
+  border-bottom-color: var(--wed9-line);
+  background-color: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  -webkit-box-shadow: none !important;
+  filter: none;
+  transition: background-color 99999s ease-out 0s;
+}
+
+.wed9-wishes-submit {
+  align-self: center;
+  margin-top: 0.3rem;
+  padding: 0.6rem 1.9rem;
+  border: 1px solid var(--wed9-gold);
+  border-radius: 999px;
+  background: transparent;
+  color: #8a6a37;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.wed9-wishes-submit:hover,
+.wed9-wishes-submit:focus-visible {
+  background: var(--wed9-gold);
+  color: #fffaf2;
+}
+
+.wed9-wishes-submit:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.wed9-wishes-thanks {
+  width: min(100%, 22rem);
+  margin: 0.4rem auto 0;
+  padding: 1.35rem 1.25rem 1.2rem;
+  border-radius: 12px;
+  border: 1px solid rgba(217, 198, 168, 0.42);
+  background: rgba(255, 250, 242, 0.38);
+  box-shadow:
+    0 14px 32px rgba(90, 73, 56, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.55);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: clamp(1.05rem, 3.8vw, 1.2rem);
+  color: var(--wed9-text);
+}
+
+.wed9-wishes-thanks[hidden] {
+  display: none;
+}
+
+.wed9-wishes-thanks.is-animating-in {
+  animation: wed9WishThanksIn 0.7s ease both;
+}
+
+.wed9-wishes-thanks-mark {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+  font-style: normal;
+  color: var(--wed9-gold);
+}
+
+.wed9-wishes-thanks p {
+  margin: 0;
+}
+
+@keyframes wed9WishThanksIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.wed9-wish-rain {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.wed9-wish-drop {
+  position: absolute;
+  top: -12%;
+  line-height: 1;
+  color: var(--wed9-gold);
+  animation-name: wed9WishDrop;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+
+.wed9-wish-drop svg {
+  display: block;
+  width: 1em;
+  height: 1em;
+}
+
+.wed9-wish-drop.is-filled svg {
+  fill: currentColor;
+  filter: drop-shadow(0 1px 2px rgba(90, 73, 56, 0.22));
+}
+
+.wed9-wish-drop.is-outline svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.55;
+  stroke-linejoin: round;
+}
+
+@keyframes wed9WishDrop {
+  0% {
+    transform: translate3d(0, -8vh, 0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.92;
+  }
+  100% {
+    transform: translate3d(var(--dx, 0px), 120vh, 0) rotate(var(--spin, 24deg));
+    opacity: 0;
+  }
+}
+
+/* ── Countdown ── */
+
+.wed9-countdown {
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(243, 227, 200, 0.85), transparent 50%),
+    var(--wed9-bg-2);
+  text-align: center;
+}
+
+.wed9-countdown-stage {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: min(48vw, 10.5rem);
+}
+
+.wed9-countdown-clock-wrap {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(45vw, 10rem);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.wed9-countdown-clock {
+  display: block;
+  width: 100%;
+  height: auto;
+  opacity: 0.16;
+}
+
+.wed9-countdown-title {
+  margin-bottom: 0.9rem;
+}
+
+.wed9-countdown-date {
+  margin: 0 0 1.8rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: clamp(1.35rem, 4.8vw, 1.85rem);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #3f3022;
+}
+
+/* WCAG 2.1 AA High-Contrast Focus Indicators */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+/* ── Warm Wishes & Special Invitees Family Section ── */
+.wed9-family-section {
+  padding: 3rem 1.5rem;
+  background: var(--wed9-bg);
+  text-align: center;
+}
+
+.wed9-family-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  max-width: 950px;
+  margin: 2rem auto 0;
+}
+
+.wed9-family-card {
+  background: rgba(255, 250, 242, 0.85);
+  border: 1px solid var(--wed9-line);
+  border-radius: 12px;
+  padding: 1.6rem 1.2rem;
+  box-shadow: 0 8px 24px rgba(90, 73, 56, 0.08);
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.wed9-family-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(90, 73, 56, 0.14);
+}
+
+.wed9-family-card::before {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border: 1px dashed rgba(181, 150, 98, 0.3);
+  border-radius: 8px;
+  pointer-events: none;
+}
+
+.wed9-family-card-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #8a6a37;
+  letter-spacing: 0.08em;
+  margin: 0 0 1rem;
+  text-transform: uppercase;
+}
+
+.wed9-family-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.05rem;
+  color: var(--wed9-text);
+  line-height: 1.45;
+}
+
+.wed9-family-list-sub {
+  font-size: 0.82rem;
+  font-family: 'Nunito', sans-serif;
+  color: #887663;
+  margin-top: 0.1rem;
+}
+
+.wed9-family-badge-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.wed9-family-badge {
+  background: rgba(181, 150, 98, 0.12);
+  border: 1px solid rgba(181, 150, 98, 0.35);
+  border-radius: 999px;
+  padding: 0.35rem 0.9rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.98rem;
+  font-weight: 500;
+  color: #3f3022;
+}
+
+
+.wed9-countdown-grid {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: clamp(0.08rem, 0.7vw, 0.28rem);
+  width: min(100%, 24rem);
+  margin: 0 auto;
+}
+
+.wed9-countdown-sep {
+  font-family: 'Cinzel', 'Cormorant Garamond', serif;
+  font-size: clamp(1.5rem, 7vw, 2.2rem);
+  font-weight: 400;
+  line-height: 1;
+  color: #b09a72;
+  margin-top: 0.12em;
+}
+
+/* Units drift in one after another, left to right, once the section is in view. */
+.wed9-countdown-grid.wed9-seq-reveal > * {
+  opacity: 0;
+  transform: translateX(-1.8rem);
+  transition: opacity 1s ease, transform 1s cubic-bezier(0.22, 0.61, 0.36, 1);
+  transition-delay: var(--delay, 0ms);
+}
+
+.wed9-full-reveal.is-revealed .wed9-countdown-grid.wed9-seq-reveal > * {
+  opacity: 1;
+  transform: none;
+}
+
+.wed9-countdown-grid > *:nth-child(1) { --delay: 0ms; }
+.wed9-countdown-grid > *:nth-child(2) { --delay: 140ms; }
+.wed9-countdown-grid > *:nth-child(3) { --delay: 260ms; }
+.wed9-countdown-grid > *:nth-child(4) { --delay: 400ms; }
+.wed9-countdown-grid > *:nth-child(5) { --delay: 520ms; }
+.wed9-countdown-grid > *:nth-child(6) { --delay: 660ms; }
+.wed9-countdown-grid > *:nth-child(7) { --delay: 780ms; }
+
+.wed9-countdown-cell {
+  flex: 0 0 auto;
+  padding: 0;
+  background: none;
+  border: 0;
+}
+
+.wed9-countdown-num {
+  display: block;
+  font-family: 'Cinzel', 'Cormorant Garamond', serif;
+  font-size: clamp(1.9rem, 9.5vw, 2.9rem);
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+  color: #3f3226;
+  line-height: 1;
+}
+
+.wed9-countdown-label {
+  display: block;
+  margin-top: 0.7rem;
+  font-family: 'Nunito', sans-serif;
+  font-size: clamp(0.56rem, 2.3vw, 0.68rem);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-indent: 0.1em;
+  text-transform: uppercase;
+  color: #6b5a46;
+}
+
+/* ── Premium contact ── */
+
+.wed9-contact {
+  background: #f6ead4;
+  text-align: center;
+}
+
+.wed9-contact-text {
+  margin: -0.9rem 0 1.6rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: clamp(0.98rem, 3.5vw, 1.12rem);
+  color: var(--wed9-text-2);
+}
+
+.wed9-contact-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.7rem;
+}
+
+.wed9-btn-contact {
+  display: inline-block;
+  padding: 0.55rem 1.35rem;
+  border: 1px solid var(--wed9-gold);
+  border-radius: 999px;
+  color: #8a6a37;
+  text-decoration: none;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.wed9-btn-contact:hover,
+.wed9-btn-contact:focus-visible {
+  background: var(--wed9-gold);
+  color: #fffaf2;
+}
+
+/* ── Welcome / wishes ── */
+
+.wed9-welcome {
+  position: relative;
+  z-index: 0;
+  background: var(--wed9-bg);
+  text-align: center;
+  padding-bottom: 4.5rem;
+  overflow: hidden;
+}
+
+/* Draped floral arch tucked behind the closing note on the left edge. */
+.wed9-welcome::after {
+  content: "";
+  position: absolute;
+  left: -14%;
+  top: 50%;
+  z-index: -1;
+  width: min(86vw, 24rem);
+  aspect-ratio: 1 / 1;
+  transform: translateY(-50%);
+  background: url("https://firebasestorage.googleapis.com/v0/b/my-bel0ved.firebasestorage.app/o/templates%2Fshared%2Fimages%2Fwedding%20t9%2Fwhite%20venue%202.png?alt=media&token=a2861b73-77f9-40d0-b578-474bb7de45ac") no-repeat left center / contain;
+  opacity: 0.22;
+  pointer-events: none;
+}
+
+.wed9-ornament-row {
+  display: flex;
+  justify-content: center;
+  gap: 0.55rem;
+  color: var(--wed9-gold);
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+}
+
+.wed9-welcome-text {
+  margin: 0 auto 1.3rem;
+  max-width: 22rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: clamp(1.15rem, 4.2vw, 1.4rem);
+  line-height: 1.55;
+  color: var(--wed9-text);
+}
+
+.wed9-closing {
+  margin: 0 0 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.wed9-closing-top {
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #8a6a37;
+}
+
+.wed9-closing-names {
+  font-family: 'Great Vibes', cursive;
+  font-size: clamp(1.8rem, 7vw, 2.3rem);
+  color: var(--wed9-text);
+}
+
+/* Couple names glide in from opposite sides once the closing section is fully in view. */
+.wed9-closing-name,
+.wed9-closing-amp {
+  display: inline-block;
+  opacity: 0;
+  transition: opacity 1s ease, transform 1s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.wed9-closing-amp {
+  margin: 0 0.75rem;
+  color: var(--wed9-gold);
+  transform: scale(0.6);
+  transition-delay: 260ms;
+}
+
+.wed9-closing-name-groom {
+  transform: translateX(-2.6rem);
+}
+
+.wed9-closing-name-bride {
+  transform: translateX(2.6rem);
+  transition-delay: 120ms;
+}
+
+body.wed9-bride-first .wed9-details-person-bride {
+  --delay: 620ms;
+  transform: translateX(-2.2rem);
+}
+
+body.wed9-bride-first .wed9-details-person-groom {
+  --delay: 860ms;
+  transform: translateX(2.2rem);
+}
+
+body.wed9-bride-first .wed9-closing-name-bride {
+  transform: translateX(-2.6rem);
+  transition-delay: 0ms;
+}
+
+body.wed9-bride-first .wed9-closing-name-groom {
+  transform: translateX(2.6rem);
+  transition-delay: 120ms;
+}
+
+.wed9-welcome.is-revealed .wed9-closing-name,
+.wed9-welcome.is-revealed .wed9-closing-amp {
+  opacity: 1;
+  transform: none;
+}
+
+/* Siblings tumble up from below, one after the other. */
+.wed9-blessing-name {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(1.5rem) rotate(-9deg);
+  transform-origin: center bottom;
+  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
+  transition-delay: calc(600ms + var(--delay, 0ms));
+}
+
+.wed9-welcome.is-revealed .wed9-blessing-name {
+  opacity: 1;
+  transform: none;
+}
+
+.wed9-blessings {
+  margin: 0;
+}
+
+.wed9-blessings-label {
+  display: block;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  color: var(--wed9-text-2);
+  margin-bottom: 0.2rem;
+}
+
+.wed9-blessings-names {
+  font-family: 'Cormorant Garamond', serif;
+  color: var(--wed9-text);
+}
+
+/* ── Reduced motion ── */
+
+@media (prefers-reduced-motion: reduce) {
+  .wed9-flap,
+  .wed9-seal,
+  .wed9-hero-line,
+  .wed9-hero-love,
+  .wed9-hero-invite,
+  .wed9-hero-invite-msg,
+  .wed9-hero-word,
+  .wed9-hero-footer,
+  .wed9-reveal,
+  .wed9-datecard > *,
+  .wed9-details-greeting,
+  .wed9-details-welcome,
+  .wed9-details-person,
+  .wed9-details-divider,
+  .wed9-details-meta,
+  .wed9-timeline-card,
+  .wed9-timeline-item::before,
+  .wed9-countdown-grid.wed9-seq-reveal > *,
+  .wed9-closing-name,
+  .wed9-closing-amp,
+  .wed9-blessing-name,
+  .wed9-fly-letter,
+  .wed9-hero-amp,
+  .wed9-venue-panel.is-active .wed9-venue-frame-wrap,
+  .wed9-venue-panel.is-active .wed9-venue-card-title,
+  .wed9-venue-panel.is-active .wed9-venue-address,
+  .wed9-venue-panel.is-active .wed9-btn-map {
+    transition: none !important;
+    animation: none !important;
+  }
+
+  .wed9-petal,
+  .wed9-scroll-hint,
+  .wed9-scroll-hint-chevron,
+  .wed9-opening-hint,
+  .wed9-quote-caret,
+  .wed9-wishes-flower,
+  .wed9-opening-loader-bloom span,
+  .wed9-choose-card {
+    animation: none !important;
+  }
+
+  .wed9-petals,
+  .wed9-hearts,
+  .wed9-wish-rain {
+    display: none;
+  }
+
+  .wed9-wishes-thanks.is-animating-in {
+    animation: none !important;
+  }
+
+  .wed9-photos-track {
+    height: auto;
+  }
+
+  .wed9-photos-stage {
+    position: relative;
+    height: auto;
+    min-height: 0;
+  }
+
+  .wed9-photo-card {
+    opacity: 1 !important;
+    transform: translateX(var(--settle-x, 0)) rotate(var(--tilt, 0deg)) !important;
+  }
+}
