@@ -915,12 +915,12 @@ body[data-variant="premium"] .wed9-premium-only {
   transform: translateX(-50%);
   width: 100%;
   margin: 0;
-  font-family: 'Great Vibes', cursive;
-  font-size: clamp(2.3rem, 7.5vw, 3.6rem);
+  font-family: 'Alex Brush', 'Great Vibes', cursive;
+  font-size: clamp(2.6rem, 8.5vw, 4rem);
   font-weight: 400;
   color: #f8efe0;
-  text-shadow: 0 2px 14px rgba(28, 24, 20, 0.65);
-  letter-spacing: 0.02em;
+  text-shadow: 0 2px 14px rgba(28, 24, 20, 0.7);
+  letter-spacing: 0.04em;
   white-space: nowrap;
   pointer-events: none;
 }
