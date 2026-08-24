@@ -890,7 +890,8 @@ body[data-variant="premium"] .wed9-premium-only {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(180deg, rgba(28, 24, 20, 0.28) 0%, rgba(28, 24, 20, 0.18) 40%, rgba(28, 24, 20, 0.42) 100%);
+    radial-gradient(ellipse at center, rgba(255, 248, 235, 0.42) 0%, rgba(255, 243, 224, 0.28) 55%, rgba(28, 24, 20, 0.35) 100%),
+    linear-gradient(180deg, rgba(255, 248, 235, 0.2) 0%, rgba(28, 24, 20, 0.25) 100%);
   pointer-events: none;
 }
 
@@ -916,10 +917,10 @@ body[data-variant="premium"] .wed9-premium-only {
   width: 100%;
   margin: 0;
   font-family: 'Alex Brush', 'Great Vibes', cursive;
-  font-size: clamp(2.6rem, 8.5vw, 4rem);
-  font-weight: 400;
-  color: #f8efe0;
-  text-shadow: 0 2px 14px rgba(28, 24, 20, 0.7);
+  font-size: clamp(2.7rem, 9vw, 4.2rem);
+  font-weight: 600;
+  color: #23170e;
+  text-shadow: 0 0 16px rgba(255, 250, 242, 0.95), 0 0 32px rgba(255, 255, 255, 0.9), 0 2px 4px rgba(0, 0, 0, 0.2);
   letter-spacing: 0.04em;
   white-space: nowrap;
   pointer-events: none;
@@ -945,18 +946,18 @@ body[data-variant="premium"] .wed9-premium-only {
   font-family: 'Cormorant Garamond', serif;
   font-style: italic;
   font-size: clamp(1.3rem, 5.4vw, 1.85rem);
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.04em;
-  color: #fbf1df;
-  text-shadow: 0 2px 18px rgba(28, 24, 20, 0.45);
+  color: #2c1d11;
+  text-shadow: 0 0 14px rgba(255, 250, 242, 0.95), 0 0 28px rgba(255, 255, 255, 0.85);
 }
 
 .wed9-hero-love {
   display: block;
   flex: none;
   width: clamp(1.15rem, 4.6vw, 1.55rem);
-  color: #ffffff;
-  filter: drop-shadow(0 2px 14px rgba(28, 24, 20, 0.45));
+  color: #362212;
+  filter: drop-shadow(0 0 10px rgba(255, 250, 242, 0.9));
 }
 
 .wed9-hero-love svg {
@@ -1008,9 +1009,10 @@ body[data-variant="premium"] .wed9-premium-only {
   font-style: italic;
   font-size: clamp(1.05rem, 3.8vw, 1.28rem);
   line-height: 1.45;
-  color: #4a3a2b;
+  color: #2c1d11;
+  font-weight: 600;
   letter-spacing: 0.04em;
-  text-shadow: 0 1px 10px rgba(251, 241, 223, 0.55);
+  text-shadow: 0 0 14px rgba(255, 250, 242, 0.95), 0 0 28px rgba(255, 255, 255, 0.85);
   text-wrap: balance;
   pointer-events: none;
 }
@@ -1040,19 +1042,19 @@ body[data-variant="premium"] .wed9-premium-only {
 .wed9-hero-groom,
 .wed9-hero-bride {
   font-family: 'Great Vibes', cursive;
-  font-size: clamp(3.1rem, 13vw, 4.6rem);
+  font-size: clamp(3.2rem, 13.5vw, 4.8rem);
   line-height: 1.05;
-  color: #fff8ea;
-  text-shadow: 0 2px 16px rgba(28, 24, 20, 0.4);
+  color: #23170e;
+  text-shadow: 0 0 20px rgba(255, 250, 242, 0.98), 0 0 38px rgba(255, 255, 255, 0.9), 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .wed9-hero-amp {
   font-family: 'Great Vibes', cursive;
   font-style: normal;
-  font-size: clamp(1.55rem, 5.6vw, 2.05rem);
+  font-size: clamp(1.65rem, 6vw, 2.15rem);
   line-height: 1;
-  color: var(--wed9-bg-2);
-  text-shadow: 0 2px 12px rgba(28, 24, 20, 0.45);
+  color: #5a422a;
+  text-shadow: 0 0 14px rgba(255, 250, 242, 0.95), 0 0 25px rgba(255, 255, 255, 0.85);
   letter-spacing: 0.04em;
   margin: 0.85rem 0 0.95rem;
   opacity: 0;
