@@ -38,7 +38,6 @@
   var petalsStarted = false;
   var venueTabsBuilt = false;
   var scrollRevealsInit = false;
-  var photoScrollInit = false;
   var quoteTyped = false;
   var wishesInit = false;
   var heartTrailInit = false;
@@ -1158,64 +1157,7 @@
     });
   }
 
-  function clamp01(value) {
-    if (value <= 0) return 0;
-    if (value >= 1) return 1;
-    return value;
-  }
 
-  function easeOutCubic(t) {
-    return 1 - Math.pow(1 - t, 3);
-  }
-
-  function getPhotoScrollProgress(track, stage) {
-    if (!track || !stage || !scrollPage) return 0;
-    var pageRect = scrollPage.getBoundingClientRect();
-    var trackRect = track.getBoundingClientRect();
-    var trackTop = trackRect.top - pageRect.top + scrollPage.scrollTop;
-    var maxScroll = Math.max(1, track.offsetHeight - stage.offsetHeight);
-    return clamp01((scrollPage.scrollTop - trackTop) / maxScroll);
-  }
-
-  function initPhotoScroll() {
-    if (photoScrollInit || !isPremium()) return;
-    var track = document.getElementById('wed9-photos-track');
-    var stage = document.getElementById('wed9-photos-stage');
-    var cards = stage ? stage.querySelectorAll('.wed9-photo-card') : [];
-    if (!track || !stage || !cards.length || !scrollPage) return;
-    photoScrollInit = true;
-
-    function cardT(progress, index) {
-      var start = 0.2 * index;
-      var span = 0.26;
-      return easeOutCubic(clamp01((progress - start) / span));
-    }
-
-    function applyProgress(progress) {
-      for (var i = 0; i < cards.length; i++) {
-        cards[i].style.setProperty('--t', cardT(progress, i).toFixed(4));
-      }
-    }
-
-    if (prefersReducedMotion) {
-      applyProgress(1);
-      return;
-    }
-
-    var ticking = false;
-    function onScroll() {
-      if (ticking) return;
-      ticking = true;
-      window.requestAnimationFrame(function () {
-        ticking = false;
-        applyProgress(getPhotoScrollProgress(track, stage));
-      });
-    }
-
-    applyProgress(getPhotoScrollProgress(track, stage));
-    scrollPage.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
-  }
 
   function buildFlyLetters(lineEl, options) {
     if (!lineEl) return;
@@ -1372,7 +1314,6 @@
     }
     startPetals();
     startCountdown();
-    initPhotoScroll();
     showMuteButton(true);
   }
 
