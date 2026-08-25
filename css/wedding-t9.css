@@ -931,7 +931,7 @@ body[data-variant="premium"] .wed9-premium-only {
   position: absolute;
   left: 1rem;
   right: 1rem;
-  top: 57%;
+  top: 44%;
   transform: translateY(-50%);
   display: flex;
   flex-direction: row;
@@ -988,15 +988,19 @@ body[data-variant="premium"] .wed9-premium-only {
 }
 
 .wed9-hero-invite {
+  position: absolute;
+  left: 1rem;
+  right: 1rem;
+  top: 62%;
+  transform: translateY(-50%);
   opacity: 0;
-  transform: translateY(0.6rem);
   transition: opacity 0.9s ease, transform 0.9s ease;
   pointer-events: none;
 }
 
 .wed9-hero-invite.is-in {
   opacity: 1;
-  transform: none;
+  transform: translateY(-50%);
 }
 
 .wed9-hero-invite-msg {
