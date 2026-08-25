@@ -911,7 +911,7 @@ body[data-variant="premium"] .wed9-premium-only {
 
 .wed9-hero-eyebrow-cursive {
   position: absolute;
-  top: 12%;
+  top: 14%;
   left: 50%;
   transform: translateX(-50%);
   width: 100%;
@@ -931,7 +931,7 @@ body[data-variant="premium"] .wed9-premium-only {
   position: absolute;
   left: 1rem;
   right: 1rem;
-  top: 42%;
+  top: 44%;
   transform: translateY(-50%);
   display: flex;
   flex-direction: row;
@@ -1002,7 +1002,7 @@ body[data-variant="premium"] .wed9-premium-only {
 .wed9-hero-invite-msg {
   position: absolute;
   left: 50%;
-  top: 32%;
+  top: 29%;
   transform: translateX(-50%);
   margin: 0;
   max-width: min(36ch, 92vw);
