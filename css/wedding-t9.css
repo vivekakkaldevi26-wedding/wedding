@@ -439,6 +439,13 @@ body {
   pointer-events: none;
 }
 
+.wed9-special-photo-link {
+  display: block;
+  text-decoration: none;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
 .wed9-special-photo-wrap img {
   display: block;
   width: 100%;
@@ -446,6 +453,19 @@ body {
   border-radius: 10px;
   object-fit: cover;
   box-shadow: 0 3px 10px rgba(90, 73, 56, 0.15);
+  transition: transform 0.4s ease;
+}
+
+.wed9-special-photo-link:hover img {
+  transform: scale(1.025);
+}
+
+.wed9-special-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
 .wed9-special-name {
@@ -456,6 +476,50 @@ body {
   letter-spacing: 0.06em;
   margin: 0;
   text-align: center;
+}
+
+.wed9-special-instagram {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.42rem 1.1rem;
+  font-family: 'Nunito', sans-serif;
+  font-size: clamp(0.85rem, 3.2vw, 0.95rem);
+  font-weight: 600;
+  color: #5a4938;
+  background: rgba(181, 150, 98, 0.12);
+  border: 1px solid rgba(181, 150, 98, 0.42);
+  border-radius: 999px;
+  text-decoration: none;
+  box-shadow: 0 2px 8px rgba(90, 73, 56, 0.06);
+  transition: all 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+  margin-top: 0.15rem;
+}
+
+.wed9-special-instagram:hover,
+.wed9-special-instagram:focus-visible {
+  color: #ffffff;
+  background: linear-gradient(135deg, #833ab4 0%, #fd1d1d 50%, #fcb045 100%);
+  border-color: transparent;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(225, 48, 108, 0.32);
+}
+
+.wed9-instagram-icon {
+  width: 17px;
+  height: 17px;
+  flex-shrink: 0;
+  stroke: currentColor;
+  transition: transform 0.25s ease;
+}
+
+.wed9-special-instagram:hover .wed9-instagram-icon {
+  transform: scale(1.15) rotate(5deg);
+}
+
+.wed9-instagram-handle {
+  letter-spacing: 0.02em;
 }
 
 .wed9-choose-btn-name {
