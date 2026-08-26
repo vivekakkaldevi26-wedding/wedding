@@ -1085,7 +1085,40 @@
   }
 
   function onSectionRevealed(el) {
+    if (!el) return;
     el.classList.add('is-visible');
+  }
+
+  function checkAllRevealsInView() {
+    if (!scrollPage) return;
+    var containerRect = scrollPage.getBoundingClientRect();
+    var vBottom = containerRect.bottom || window.innerHeight;
+    var vTop = containerRect.top || 0;
+
+    var reveals = document.querySelectorAll('.wed9-reveal:not(.is-visible)');
+    for (var i = 0; i < reveals.length; i++) {
+      var r = reveals[i].getBoundingClientRect();
+      if (r.top < vBottom + 60 && r.bottom > vTop - 40) {
+        onSectionRevealed(reveals[i]);
+      }
+    }
+
+    var fullReveals = document.querySelectorAll('.wed9-full-reveal:not(.is-revealed)');
+    for (var j = 0; j < fullReveals.length; j++) {
+      var fr = fullReveals[j].getBoundingClientRect();
+      if (fr.top < vBottom - 30 && fr.bottom > vTop + 20) {
+        fullReveals[j].classList.add('is-revealed');
+        if (fullReveals[j].id === 'wed9-quote') typeQuote();
+      }
+    }
+
+    var centerReveals = document.querySelectorAll('.wed9-center-reveal:not(.is-centered)');
+    for (var k = 0; k < centerReveals.length; k++) {
+      var cr = centerReveals[k].getBoundingClientRect();
+      if (cr.top < vBottom - 50 && cr.bottom > vTop + 50) {
+        centerReveals[k].classList.add('is-centered');
+      }
+    }
   }
 
   function initScrollReveals() {
@@ -1097,11 +1130,12 @@
     }
     var observer = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
-        if (!entry.isIntersecting) return;
-        onSectionRevealed(entry.target);
-        observer.unobserve(entry.target);
+        if (entry.isIntersecting || entry.intersectionRatio > 0) {
+          onSectionRevealed(entry.target);
+          observer.unobserve(entry.target);
+        }
       });
-    }, { root: scrollPage, threshold: 0.18 });
+    }, { root: scrollPage, threshold: [0, 0.05, 0.1] });
     sections.forEach(function (el) {
       observer.observe(el);
     });
@@ -1119,11 +1153,12 @@
     }
     var observer = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
-        if (!entry.isIntersecting) return;
-        entry.target.classList.add('is-centered');
-        observer.unobserve(entry.target);
+        if (entry.isIntersecting || entry.intersectionRatio > 0) {
+          entry.target.classList.add('is-centered');
+          observer.unobserve(entry.target);
+        }
       });
-    }, { root: scrollPage, rootMargin: '-45% 0px -45% 0px', threshold: 0 });
+    }, { root: scrollPage, rootMargin: '-20% 0px -20% 0px', threshold: [0, 0.05] });
     cards.forEach(function (el) {
       observer.observe(el);
     });
@@ -1144,14 +1179,14 @@
     }
     var observer = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
+        if (!entry.isIntersecting && entry.intersectionRatio <= 0) return;
         var bounds = entry.rootBounds;
-        var fullyInView = entry.intersectionRatio >= 0.99;
-        var fillsViewport = bounds && entry.intersectionRect.height >= bounds.height * 0.95;
-        if (!fullyInView && !fillsViewport) return;
+        var inView = entry.intersectionRatio >= 0.15 || (bounds && entry.intersectionRect.height >= 70) || entry.isIntersecting;
+        if (!inView) return;
         reveal(entry.target);
         observer.unobserve(entry.target);
       });
-    }, { root: scrollPage, threshold: [0.5, 0.75, 0.99, 1] });
+    }, { root: scrollPage, threshold: [0, 0.1, 0.25, 0.5, 0.75, 0.99, 1] });
     sections.forEach(function (el) {
       observer.observe(el);
     });
@@ -1307,6 +1342,26 @@
       initFullReveals();
       initScrollHintFade();
       scrollRevealsInit = true;
+
+      var ticking = false;
+      var onScrollRevealCheck = function () {
+        if (!ticking) {
+          requestAnimationFrame(function () {
+            checkAllRevealsInView();
+            ticking = false;
+          });
+          ticking = true;
+        }
+      };
+      if (scrollPage) {
+        scrollPage.addEventListener('scroll', onScrollRevealCheck, { passive: true });
+      }
+      window.addEventListener('scroll', onScrollRevealCheck, { passive: true });
+      window.addEventListener('resize', onScrollRevealCheck, { passive: true });
+      window.addEventListener('orientationchange', onScrollRevealCheck, { passive: true });
+      setTimeout(checkAllRevealsInView, 150);
+      setTimeout(checkAllRevealsInView, 500);
+      setTimeout(checkAllRevealsInView, 1200);
     }
     if (!venueTabsBuilt) {
       buildVenueTabs();

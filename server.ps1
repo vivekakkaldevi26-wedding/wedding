@@ -26,6 +26,10 @@ while ($listener.IsListening) {
             ".png"  { $res.ContentType = "image/png" }
             ".svg"  { $res.ContentType = "image/svg+xml" }
         }
+        $res.AddHeader("Cache-Control", "no-cache, no-store, must-revalidate, max-age=0")
+        $res.AddHeader("Pragma", "no-cache")
+        $res.AddHeader("Expires", "0")
+        $res.AddHeader("Access-Control-Allow-Origin", "*")
         $buffer = [System.IO.File]::ReadAllBytes($filePath)
         $res.ContentLength64 = $buffer.Length
         $res.OutputStream.Write($buffer, 0, $buffer.Length)

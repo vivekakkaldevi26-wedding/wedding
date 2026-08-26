@@ -299,6 +299,10 @@ body {
   padding: 3.5rem 1.5rem 4rem;
   background: var(--wed9-bg);
   text-align: center;
+  position: relative;
+  opacity: 1 !important;
+  transform: none !important;
+  display: block !important;
 }
 
 .wed9-family-subtitle {
@@ -891,11 +895,15 @@ body.wed9-open-slow .wed9-seal {
   opacity: 0;
   transform: translateY(1.1rem);
   transition: opacity 0.85s ease, transform 0.85s ease;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  will-change: opacity, transform;
 }
 
 .wed9-reveal.is-visible {
   opacity: 1;
   transform: none;
+  will-change: auto;
 }
 
 .wed9-premium-only {
@@ -2547,6 +2555,9 @@ body[data-variant="premium"] .wed9-premium-only {
   text-align: center;
   padding-bottom: 4.5rem;
   overflow: hidden;
+  opacity: 1 !important;
+  transform: none !important;
+  display: block !important;
 }
 
 /* Draped floral arch tucked behind the closing note on the left edge. */
@@ -2605,48 +2616,23 @@ body[data-variant="premium"] .wed9-premium-only {
   color: var(--wed9-text);
 }
 
-/* Couple names glide in from opposite sides once the closing section is fully in view. */
+/* Couple names are fully visible by default on all devices */
 .wed9-closing-name,
 .wed9-closing-amp {
   display: inline-block;
-  opacity: 0;
-  transition: opacity 1s ease, transform 1s cubic-bezier(0.22, 0.61, 0.36, 1);
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.8s ease, transform 0.8s ease;
 }
 
 .wed9-closing-amp {
   margin: 0 0.75rem;
   color: var(--wed9-gold);
-  transform: scale(0.6);
-  transition-delay: 260ms;
 }
 
-.wed9-closing-name-groom {
-  transform: translateX(-2.6rem);
-}
-
+.wed9-closing-name-groom,
 .wed9-closing-name-bride {
-  transform: translateX(2.6rem);
-  transition-delay: 120ms;
-}
-
-body.wed9-bride-first .wed9-details-person-bride {
-  --delay: 620ms;
-  transform: translateX(-2.2rem);
-}
-
-body.wed9-bride-first .wed9-details-person-groom {
-  --delay: 860ms;
-  transform: translateX(2.2rem);
-}
-
-body.wed9-bride-first .wed9-closing-name-bride {
-  transform: translateX(-2.6rem);
-  transition-delay: 0ms;
-}
-
-body.wed9-bride-first .wed9-closing-name-groom {
-  transform: translateX(2.6rem);
-  transition-delay: 120ms;
+  transform: none;
 }
 
 .wed9-welcome.is-revealed .wed9-closing-name,
@@ -2655,14 +2641,12 @@ body.wed9-bride-first .wed9-closing-name-groom {
   transform: none;
 }
 
-/* Siblings tumble up from below, one after the other. */
+/* Siblings and family blessings */
 .wed9-blessing-name {
   display: inline-block;
-  opacity: 0;
-  transform: translateY(1.5rem) rotate(-9deg);
-  transform-origin: center bottom;
+  opacity: 1;
+  transform: none;
   transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
-  transition-delay: calc(600ms + var(--delay, 0ms));
 }
 
 .wed9-welcome.is-revealed .wed9-blessing-name {
