@@ -412,6 +412,48 @@ body {
   text-align: center;
 }
 
+/* Very Special Invitee Card & Frame */
+.wed9-special-photo-wrap {
+  position: relative;
+  max-width: min(94%, 440px);
+  margin: 0 auto 1.3rem;
+  padding: 0.65rem;
+  background: linear-gradient(145deg, #fffdf7 0%, #fdf6e9 52%, #f7ecd9 100%);
+  border: 1.5px solid rgba(181, 150, 98, 0.6);
+  border-radius: 16px;
+  box-shadow:
+    0 4px 14px rgba(90, 73, 56, 0.08),
+    0 12px 30px rgba(181, 150, 98, 0.22);
+}
+
+.wed9-special-photo-wrap::before {
+  content: "";
+  position: absolute;
+  inset: 0.28rem;
+  border: 1px solid rgba(181, 150, 98, 0.4);
+  border-radius: 12px;
+  pointer-events: none;
+}
+
+.wed9-special-photo-wrap img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  object-fit: cover;
+  box-shadow: 0 3px 10px rgba(90, 73, 56, 0.15);
+}
+
+.wed9-special-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.45rem, 5vw, 1.85rem);
+  font-weight: 700;
+  color: #3f3022;
+  letter-spacing: 0.06em;
+  margin: 0;
+  text-align: center;
+}
+
 .wed9-choose-btn-name {
   display: block;
   font-size: 0.95rem;
